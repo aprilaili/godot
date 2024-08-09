@@ -23,19 +23,19 @@ addons:
       - llvm
       - clang
       - mingw-w64
-      - g++-mingw-w64-x86-64
 
 # Prepare MinGW-w64 environment
 before_install:
-  - sudo apt-get install -y software-properties-common
-  - sudo update-alternatives --install /usr/bin/x86_64-w64-mingw32-gcc x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-9 100
-  - sudo update-alternatives --install /usr/bin/x86_64-w64-mingw32-g++ x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-9 100
+  - sudo apt-get update
+  - sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 
 # Build stages
 jobs:
   include:
     - stage: Build Godot for Windows
       script:
+        # Set environment variables for MinGW-w64
+        - export PATH=$PATH:/usr/bin/x86_64-w64-mingw32/
         # Build the editor for Windows
         - scons platform=windows target=editor use_llvm=yes use_mingw=yes disable_exceptions=false -j$(nproc)
         # Build the export templates
