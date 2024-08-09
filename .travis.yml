@@ -1,1 +1,41 @@
+# Specify the programming language
 language: cpp
+
+# Specify the environment
+dist: focal   # Ubuntu 20.04 LTS
+
+# Cache dependencies
+cache:
+  directories:
+    - $HOME/.cache/scons
+
+# Install necessary dependencies
+addons:
+  apt:
+    packages:
+      - build-essential
+      - scons
+      - pkg-config
+      - libx11-dev
+      - libxcursor-dev
+      - libxinerama-dev
+      - libgl1-mesa-dev
+      - libglu1-mesa-dev
+      - libasound2-dev
+      - libpulse-dev
+      - libudev-dev
+      - libxi-dev
+      - libxrandr-dev
+      - yasm
+      - zip
+
+# Build stages
+jobs:
+  include:
+    - stage: Build Godot
+      script:
+        # Build the editor for Linux
+        - scons platform=x11 -j$(nproc) tools=yes target=release_debug
+        # Build export templates
+        - scons platform=x11 -j$(nproc) tools=no target=release_debug
+        - scons platform=x11 -j$(nproc) tools=no target=release
