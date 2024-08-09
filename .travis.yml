@@ -8,7 +8,6 @@ dist: focal   # Ubuntu 20.04 LTS
 cache:
   directories:
     - $HOME/.cache/scons
-    - $HOME/mingw-w64
 
 # Install necessary dependencies
 addons:
@@ -17,30 +16,26 @@ addons:
       - build-essential
       - scons
       - pkg-config
+      - libx11-dev
+      - libxcursor-dev
+      - libxinerama-dev
+      - libgl1-mesa-dev
+      - libglu1-mesa-dev
+      - libasound2-dev
+      - libpulse-dev
+      - libudev-dev
+      - libxi-dev
+      - libxrandr-dev
       - yasm
       - zip
-      - p7zip-full
-      - llvm
-      - clang
-      - mingw-w64
-      - gcc-mingw-w64-x86-64-posix
-      - g++-mingw-w64-x86-64-posix
-
-# Switch to the posix variant of MinGW-w64
-before_install:
-  - sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
-  - sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
 
 # Build stages
 jobs:
   include:
-    - stage: Build Godot for Windows
+    - stage: Build Godot
       script:
-        # Set environment variables for MinGW-w64
-        - export PATH=$PATH:/usr/bin/x86_64-w64-mingw32/
-        # Build the editor for Windows
-        - scons platform=windows target=editor use_llvm=yes use_mingw=yes disable_exceptions=false -j$(nproc)
-        # Build the export templates
-        - scons platform=windows target=template_release use_llvm=yes use_mingw=yes disable_exceptions=false -j$(nproc)
-        - scons platform=windows target=template_debug use_llvm=yes use_mingw=yes disable_exceptions=false -j$(nproc)
-
+        # Build the editor for Linux
+        - scons platform=linuxbsd target=editor disable_exceptions=false
+        # Build export templates
+        - scons platform=linuxbsd target=template_release disable_exceptions=false
+        - scons platform=linuxbsd target=template_debug disable_exceptions=false
