@@ -35,7 +35,7 @@ jobs:
     - stage: Build Godot
       script:
         # Build the editor for Linux
-        - scons platform=x11 -j$(nproc) tools=yes target=release_debug
+        - scons platform=linuxbsd -j$(nproc) tools=yes target=editor
         # Build export templates
-        - scons platform=x11 -j$(nproc) tools=no target=release_debug
-        - scons platform=x11 -j$(nproc) tools=no target=release
+        - scons platform=linuxbsd -j$(nproc) tools=no target=template_release
+        - scons platform=linuxbsd -j$(nproc) tools=no target=template_debug
